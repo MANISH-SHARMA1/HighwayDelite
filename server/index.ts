@@ -27,7 +27,7 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: process.env.ORIGIN,
+    origin: process.env.ORIGIN || "https://highway-delite-eight.vercel.app",
   })
 );
 
