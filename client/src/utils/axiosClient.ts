@@ -6,7 +6,7 @@ import {
   setItem,
 } from "./localStorageManager";
 
-let baseURL = "https://highway-delite-1ii7.vercel.app/";
+let baseURL =  process.env.REACT_APP_SERVER_URL;
 
 export const axiosClient = axios.create({
   baseURL,
