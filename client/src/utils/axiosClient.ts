@@ -50,7 +50,7 @@ axiosClient.interceptors.response.use(
         .get(`${baseURL}jwtAuth/refresh`);
 
       if (response.data.status === "ok") {
-        const newAccessToken = response.data.result.accessToken;
+        const newAccessToken = response.data.result;
 
         setItem(KEY_ACCESS_TOKEN, newAccessToken);
         originalRequest.headers![
