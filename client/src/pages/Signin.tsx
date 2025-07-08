@@ -2,6 +2,9 @@ import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react'
 import Logo from "../assets/top.png"
 import RightImg from "../assets/rightImg.jpg"
+import { axiosClient } from '../utils/axiosClient';
+import { KEY_ACCESS_TOKEN, setItem } from '../utils/localStorageManager';
+import { useNavigate } from 'react-router-dom';
 
 interface FormData {
     email: string;
@@ -14,6 +17,7 @@ interface FormErrors {
 }
 
 function Signin() {
+    const navigate = useNavigate()
     const [formData, setFormData] = useState<FormData>({
         email: "",
         otp: "",
@@ -40,21 +44,31 @@ function Signin() {
         return newErrors;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const validationErrors = validate();
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
         } else {
-            console.log(formData);
-            // Submit to backend
+            const response = await axiosClient.post("jwtAuth/signin", {
+                email: formData.email,
+                otp: formData.otp
+            })
+
+            setItem(KEY_ACCESS_TOKEN, response.data.result)
+            navigate("/")
         }
     };
+
+    const handleGoogleLogin = () => {
+        window.open(`${process.env.REACT_APP_SERVER_URL}auth/google/callback`, "_self");
+    };
+
     return (
         <div className="min-h-screen flex flex-col lg:flex-row items-center md:justify-center">
             {/* Form Section */}
             <div className="w-full max-w-md">
-                <div className="flex items-center justify-center lg:justify-start mb-5 lg:pl-2">
+                <div className="flex items-center justify-center lg:justify-start mt-5 lg:mt-0 mb-5 lg:pl-2">
                     <img src={Logo} alt="HD Logo" className="h-10" />
                     <p className="text-4xl font-semibold">HD</p>
                 </div>
@@ -115,6 +129,13 @@ function Signin() {
                         className="w-full bg-blue-600 text-white py-2 rounded-xl font-semibold hover:bg-blue-700 transition"
                     >
                         Sign In
+                    </button>
+
+                    <button
+                        onClick={handleGoogleLogin}
+                        className="w-full text-white rounded-xl font-semibold bg-blue-600 hover:bg-blue-700 transition px-4 py-2"
+                    >
+                        Continue With Google
                     </button>
                 </form>
 

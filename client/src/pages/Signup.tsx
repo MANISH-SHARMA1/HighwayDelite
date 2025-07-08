@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Logo from "../assets/top.png";
 import RightImg from "../assets/rightImg.jpg";
+import { axiosClient } from "../utils/axiosClient";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
     name: string;
@@ -18,6 +20,7 @@ interface FormErrors {
 }
 
 const SignUp: React.FC = () => {
+    const navigate = useNavigate()
     const [formData, setFormData] = useState<FormData>({
         name: "",
         dob: "",
@@ -48,22 +51,36 @@ const SignUp: React.FC = () => {
         return newErrors;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const validationErrors = validate();
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
         } else {
-            console.log(formData);
-            // Submit to backend
+            const response = await axiosClient.post("jwtAuth/signup", {
+                formData
+            })
+
+            setFormData({
+                name: "",
+                dob: "",
+                email: "",
+                otp: ""
+            })
+            navigate("/signin")
+            alert(response.data.result)
         }
+    };
+
+    const handleGoogleLogin = () => {
+        window.open(`${process.env.REACT_APP_SERVER_URL}auth/google/callback`, "_self");
     };
 
     return (
         <div className="min-h-screen flex flex-col lg:flex-row items-center md:justify-center">
             {/* Form section */}
             <div className="w-full max-w-md">
-                <div className="flex items-center justify-center lg:justify-start mb-5 lg:pl-2">
+                <div className="flex items-center justify-center lg:justify-start mt-5 lg:mt-0 mb-5 lg:pl-2">
                     <img src={Logo} alt="HD Logo" className="h-10" />
                     <p className="text-4xl font-semibold">HD</p>
                 </div>
@@ -150,6 +167,13 @@ const SignUp: React.FC = () => {
                         className="w-full bg-blue-600 text-white py-2 rounded-xl font-semibold hover:bg-blue-700 transition"
                     >
                         Sign up
+                    </button>
+
+                    <button
+                        onClick={handleGoogleLogin}
+                        className="w-full text-white rounded-xl font-semibold bg-blue-600 hover:bg-blue-700 transition px-4 py-2"
+                    >
+                        Continue With Google
                     </button>
                 </form>
 
