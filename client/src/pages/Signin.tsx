@@ -50,13 +50,18 @@ function Signin() {
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
         } else {
-            const response = await axiosClient.post("jwtAuth/signin", {
-                email: formData.email,
-                otp: formData.otp
-            })
+            try {
+                const response = await axiosClient.post("jwtAuth/signin", {
+                    email: formData.email,
+                    otp: formData.otp
+                })
 
-            setItem(KEY_ACCESS_TOKEN, response.data.result)
-            navigate("/")
+                setItem(KEY_ACCESS_TOKEN, response.data.result)
+                navigate("/")
+            } catch (error) {
+                return
+            }
+
         }
     };
 

@@ -33,7 +33,7 @@ axiosClient.interceptors.response.use(
       _retry?: boolean;
     };
     const statusCode = data.statusCode;
-    const error = data.result;
+    const error = data.message;
 
     if (statusCode !== 401) {
       alert(error);
@@ -69,6 +69,7 @@ axiosClient.interceptors.response.use(
     return Promise.reject(error);
   },
   async (error) => {
+    console.log(error)
     alert(error.message);
     return Promise.reject(error);
   }
