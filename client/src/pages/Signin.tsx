@@ -51,7 +51,7 @@ function Signin() {
             setErrors(validationErrors);
         } else {
             try {
-                const response = await axiosClient.post("jwtAuth/signin", {
+                const response = await axiosClient.post("/jwtAuth/signin", {
                     email: formData.email,
                     otp: formData.otp
                 })

@@ -23,7 +23,7 @@ function Home() {
 
   const getUser = async () => {
     try {
-      const response = await axiosClient.get("user/getUser");
+      const response = await axiosClient.get("/user/getUser");
       const user = response.data.result;
       setUser({ name: user.name, email: user.email });
     } catch (e) {
@@ -33,7 +33,7 @@ function Home() {
 
   const getNotes = async () => {
     try {
-      const response = await axiosClient.get("notes/get");
+      const response = await axiosClient.get("/notes/get");
       setNotes(response.data.result || []);
     } catch (e) {
       console.log(e);
@@ -44,7 +44,7 @@ function Home() {
     if (!newNote.trim()) return;
 
     try {
-      const res = await axiosClient.post("notes/add", {
+      const res = await axiosClient.post("/notes/add", {
         note: newNote,
       });
 
@@ -59,7 +59,7 @@ function Home() {
 
   const handleDeleteNote = async (id: string) => {
     try {
-      await axiosClient.delete(`notes/delete?id=${id}`);
+      await axiosClient.delete(`/notes/delete?id=${id}`);
       setNotes(notes.filter((n) => n._id !== id));
     } catch (e) {
       console.log(e);
@@ -69,7 +69,7 @@ function Home() {
   // Sign out
   const handleSignOut = async () => {
     try {
-      await axiosClient.get("jwtAuth/logout");
+      await axiosClient.get("/jwtAuth/logout");
       removeItem(KEY_ACCESS_TOKEN);
       removeItem("refreshToken");
       navigate("/signin");

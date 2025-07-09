@@ -58,7 +58,7 @@ const SignUp: React.FC = () => {
             setErrors(validationErrors);
         } else {
             try {
-                const response = await axiosClient.post("jwtAuth/signup", {
+                const response = await axiosClient.post("/jwtAuth/signup", {
                     formData
                 })
 
